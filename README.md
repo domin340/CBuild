@@ -33,7 +33,7 @@ Allow you to run one out of few projects,
 - file - this argument defines the main file of the project. Default main,
 - h / help - displays help. Stops the program if provided
 
-## Examples
+## Usage Examples
 
 After you either built the project using webpack or installed the pre-release.\
 You can now use CBuild!
@@ -64,5 +64,10 @@ using WGET
 ```powershell
 wget -0 ./index.min.cjs https://github.com/domin340/CBuild/releases/download/alpha/index.min.cjs;
 ```
+
+## Requirements for Contribution/Cloning
+
+- PNPM *9.12.3*,
+- NodeJS Enviroment *v22.3.0*
 
 Thank you for visiting my repository 🔥
