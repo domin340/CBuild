@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "strict": true,
+    "module": "CommonJS",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext",
+      "ESNext.Array",
+      "ESNext.AsyncIterable",
+      "ESNext.Symbol"
+    ],
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "Node",
+    "noImplicitAny": false,
+    "jsx": "preserve",
+    "baseUrl": "./src",
+    "paths": {
+      "*": ["*", "*.js"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}

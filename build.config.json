@@ -1,0 +1,5 @@
+{
+  "out": "$/bin/main",
+  "input": "TEST_2/*",
+  "compl": "g++"
+}
