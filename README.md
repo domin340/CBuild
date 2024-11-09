@@ -49,7 +49,7 @@ node path/name.cjs --input="MY_C_SOURCE_CODE" --out="$/bin/main" --compl="gcc";
 node path/name.cjs --config="./configs/cbuild.json" # defeaultly it will be ./build.config.json
 ```
 
-## Fast release installation
+## Express installation
 
 Change the name after "o" and 0 flag however you like!
 
