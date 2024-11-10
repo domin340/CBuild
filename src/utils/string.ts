@@ -29,7 +29,3 @@ export function wildcardsToURL(
       .split("/")
   );
 }
-
-export function getStringAndElse(input: any, otherwise: string): string {
-  return typeof input == "string" ? input : otherwise;
-}

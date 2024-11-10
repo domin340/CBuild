@@ -25,8 +25,7 @@ CBuild has few very useful flags you should remember!\
 - input - defines the source code path. Default src,
 - out - defines the output of the build,
 - test - works if input is not provided. Changes the default input to test directory,
-- config - instead of checking other flags it will use the json file provided as value.\
-Default ./build.config.json,
+- config - instead of checking other flags it will use the json file provided as value,
 - proj - what project do you want to run. Only works if while using input * wildcard at the end\
 Allow you to run one out of few projects,
 - compl - required argument that's used to determine whenever you want to compile c or c++ code,

@@ -1,27 +1,68 @@
-import { argv } from "process";
+import { argv, exit } from "process";
 import { Logger } from "./logger";
-import { ConstantARGS, ARG_VALUE } from "../const";
+import { ConstantARGS, ARG_VAL_T } from "../const";
 
-export type parsedArgs = { [key: string]: string | boolean };
-
+export type parsedArgs = { [key: string]: ARG_VAL_T };
 export type ArgMap = {
   [key: string]: (key: string) => void;
 } & { onError: (key: string) => void };
 
-export function isArgTypeValue(
-  input: any,
-  type: ARG_VALUE
-): input is typeof type {
-  return typeof input == type;
-}
-
-export class CLI_TOOLS {
-  constructor(public listed_args: ConstantARGS) {}
-  public display_help(): void {
+export class Flags {
+  public args!: parsedArgs;
+  public static validate_def(def: ConstantARGS, args: parsedArgs): boolean {
+    return (
+      Object.entries(def).filter(([key, val]) => {
+        const is_missing = val.required && !(key in args);
+        if (is_missing) Logger.log("error", `${key} not provided`);
+        return is_missing;
+      }).length > 0
+    );
+  }
+  constructor(
+    public def: ConstantARGS,
+    public map?: ArgMap,
+    public strict: boolean = true
+  ) {
+    this.args = this.parseArgs();
+  }
+  /** @description returns (is key defined and valid, fixed key, parsed val) */
+  private stripArg(arg: string): [boolean, string, ARG_VAL_T] {
+    const [key, val] = arg.split("=");
+    const fixedKey = key.replace(/\-/g, "").toLowerCase().trim();
+    const defined = this.def[fixedKey];
+    if (!defined) return [false, fixedKey, 0];
+    const fixed_val = val ?? true;
+    return [
+      typeof fixed_val == defined.type,
+      fixedKey,
+      defined.type == "number" ? Number(fixed_val) : fixed_val,
+    ];
+  }
+  // FIXME: Check the required if provided.
+  private parseArgs(): parsedArgs {
+    const args = {};
+    for (const arg of argv.slice(2)) {
+      const [isValid, key, val] = this.stripArg(arg);
+      if (isValid) {
+        // if theres a key listening for this event. Run it
+        this.map?.[key]?.(key);
+        args[key] = val;
+      } else {
+        this.map?.onError(key);
+        Logger.log(
+          "error",
+          `${key}'s type is either invalid or it is not a part of defined list`
+        );
+      }
+    }
+    if (this.strict && Flags.validate_def(this.def, args)) exit(-1);
+    return args;
+  }
+  public static display_help(def: ConstantARGS): void {
     Logger.display_help();
     Logger.log("success", "ARGUMENTS HELP");
-    for (const key in this.listed_args) {
-      const value = this.listed_args[key];
+    for (const key in def) {
+      const value = def[key];
       console.log(
         `${key}:\n\t-${value.desc}\n\t-type: ${value.type}\n\t-required? ${
           value.required ? "yes" : "no"
@@ -29,35 +70,11 @@ export class CLI_TOOLS {
       );
     }
   }
-  /**
-   * @description parse arguments. Skips first 2 (compiler and file)
-   */
-  public parseArgs(map?: ArgMap): parsedArgs {
-    const args = {};
-    for (const arg of argv.slice(2)) {
-      // prepare key
-      const [key, val] = arg.split("=");
-      const fixedKey = key.replace(/\-/g, "").toLowerCase().trim();
-      const listed_arg = this.listed_args[fixedKey];
-      // is key in listed args? (./src/consts default object export)
-      if (listed_arg) {
-        const fixed_val = val ?? true;
-        const arg_type = listed_arg.type;
-        // type checker defined using type guard
-        if (!isArgTypeValue(fixed_val, arg_type)) {
-          Logger.log(
-            "error",
-            `${key} expected type ${arg_type} got ${typeof fixed_val}`
-          );
-        }
-        // checks if the map exists and key is being listened on in map if so run it
-        map?.[fixedKey]?.(fixedKey);
-        args[fixedKey] = fixed_val;
-      } else {
-        // if the the key is not in listed args run onError function if exists
-        map?.onError(fixedKey);
-      }
-    }
-    return args;
+  public get<T extends ARG_VAL_T>(item: string): T | undefined {
+    const val = this.def[item];
+    const arg = this.args[item];
+    if (!val || !arg) return undefined;
+    else if (typeof arg == val.type) return arg as T;
+    else undefined;
   }
 }

@@ -1,4 +1,5 @@
 export type ARG_VALUE = "string" | "number" | "boolean";
+export type ARG_VAL_T = string | number | boolean;
 export type ConstantARGS = {
   [key: string]: {
     type: ARG_VALUE;
@@ -14,17 +15,17 @@ export default {
   out: {
     type: "string",
     desc: `determines where the compiled c++ code will end up, supports wild cards like (
-        $: input_dir,
-        %: replaces for the project name,
-        #: iteration loop counter. Starts from 1.
-      )`,
+          $: input_dir,
+          %: replaces for the project name,
+          #: iteration loop counter. Starts from 1.
+        )`,
   },
   test: {
     type: "boolean",
     desc: "determines whenever to run input_dir or ./test",
   },
   config: {
-    type: "boolean",
+    type: "string",
     desc: "config determines whenever to continue with cli commands or just json",
   },
   proj: {
