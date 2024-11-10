@@ -38,7 +38,6 @@ export class Flags {
       defined.type == "number" ? Number(fixed_val) : fixed_val,
     ];
   }
-  // FIXME: Check the required if provided.
   private parseArgs(): parsedArgs {
     const args = {};
     for (const arg of argv.slice(2)) {

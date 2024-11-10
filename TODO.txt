@@ -1,0 +1,3 @@
+1. Fix the code madness
+2. Implement a way to get few values from argv
+3. Rework ./src/utils/build.ts
