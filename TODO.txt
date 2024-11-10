@@ -1,3 +1,32 @@
 1. Fix the code madness
 2. Implement a way to get few values from argv
 3. Rework ./src/utils/build.ts
+
+REWORK CONSIDERATION:
+
+Proposal 1:
+- Inspired Golang flags
+- Initialize flags via builder class
+  For instance:
+    new Flags()
+      .Int("flag", "default value", "description", required (true/false))
+      .Bool(...)
+      .String(...)
+      .Any(...)
+- To Access them easy you can use get<type>("name")
+- Pros: Type safe
+- Cons: Redundant
+
+Proposal 2:
+- JSON dictionary with flags and its definitions
+  For instance:
+    {
+      "flag": {
+        "default": val,
+        "descriptiom": "here goes the description",
+        "required": true/false
+      },
+      ...
+    }
+- Pros: Less typing
+- Cons: Decently type safe. Checking types during initialization
